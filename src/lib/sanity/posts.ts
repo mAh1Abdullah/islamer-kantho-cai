@@ -1,26 +1,30 @@
-import { sanityClient } from './client';
+import { fetchSanity } from './client';
 import { postSummaryFragment, postDetailFragment } from './queries';
 import type { Post, PostSummary, PaginatedResult } from '@/types/sanity';
 
 const PAGE_SIZE = 12;
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  return sanityClient.fetch(
+  return fetchSanity<Post | null>(
     `*[_type == "post" && slug.current == $slug][0]{ ${postDetailFragment} }`,
-    { slug }
+    { slug },
+    null
   );
 }
 
 export async function getPosts(page = 0, pageSize = PAGE_SIZE): Promise<PaginatedResult<PostSummary>> {
-  const start = page * pageSize;
-  const end = start + pageSize;
+  const safePage = Math.max(0, Math.floor(page));
+  const safePageSize = Math.max(1, Math.floor(pageSize));
+  const start = safePage * safePageSize;
+  const end = start + safePageSize;
 
   const [items, total] = await Promise.all([
-    sanityClient.fetch<PostSummary[]>(
+    fetchSanity<PostSummary[]>(
       `*[_type == "post"] | order(publishedAt desc) [$start...$end]{ ${postSummaryFragment} }`,
-      { start, end }
+      { start, end },
+      []
     ),
-    sanityClient.fetch<number>(`count(*[_type == "post"])`),
+    fetchSanity<number>(`count(*[_type == "post"])`, undefined, 0),
   ]);
 
   return { items, total, hasMore: end < total };
@@ -31,33 +35,41 @@ export async function getPostsByCategory(
   page = 0,
   pageSize = PAGE_SIZE
 ): Promise<PaginatedResult<PostSummary>> {
-  const start = page * pageSize;
-  const end = start + pageSize;
+  const safePage = Math.max(0, Math.floor(page));
+  const safePageSize = Math.max(1, Math.floor(pageSize));
+  const start = safePage * safePageSize;
+  const end = start + safePageSize;
   const filter = `_type == "post" && category->slug.current == $categorySlug`;
 
   const [items, total] = await Promise.all([
-    sanityClient.fetch<PostSummary[]>(
+    fetchSanity<PostSummary[]>(
       `*[${filter}] | order(publishedAt desc) [$start...$end]{ ${postSummaryFragment} }`,
-      { categorySlug, start, end }
+      { categorySlug, start, end },
+      []
     ),
-    sanityClient.fetch<number>(`count(*[${filter}])`, { categorySlug }),
+    fetchSanity<number>(`count(*[${filter}])`, { categorySlug }, 0),
   ]);
 
   return { items, total, hasMore: end < total };
 }
 
 export async function searchPosts(query: string, limit = 20): Promise<PostSummary[]> {
-  if (!query.trim()) return [];
-  return sanityClient.fetch(
+  const safeQuery = query.trim();
+  if (!safeQuery) return [];
+  const safeLimit = Math.max(1, Math.floor(limit));
+  return fetchSanity<PostSummary[]>(
     `*[_type == "post" && (title match $q || excerpt match $q)] | order(publishedAt desc) [0...$limit]{ ${postSummaryFragment} }`,
-    { q: `${query}*`, limit }
+    { q: `${safeQuery}*`, limit: safeLimit },
+    []
   );
 }
 
 /** Related posts: same category, excluding the current article. */
 export async function getRelatedPosts(currentId: string, categorySlug: string, limit = 3): Promise<PostSummary[]> {
-  return sanityClient.fetch(
+  const safeLimit = Math.max(1, Math.floor(limit));
+  return fetchSanity<PostSummary[]>(
     `*[_type == "post" && category->slug.current == $categorySlug && _id != $currentId] | order(publishedAt desc) [0...$limit]{ ${postSummaryFragment} }`,
-    { categorySlug, currentId, limit }
+    { categorySlug, currentId, limit: safeLimit },
+    []
   );
 }

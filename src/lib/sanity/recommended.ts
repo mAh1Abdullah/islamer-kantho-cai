@@ -1,4 +1,4 @@
-import { sanityClient } from './client';
+import { fetchSanity } from './client';
 import { postSummaryFragment } from './queries';
 import type { PostSummary } from '@/types/sanity';
 
@@ -8,8 +8,9 @@ import type { PostSummary } from '@/types/sanity';
  * independently in Sanity.
  */
 export async function getRecommendedPosts(excludeIds: string[] = [], limit = 6): Promise<PostSummary[]> {
-  return sanityClient.fetch(
+  return fetchSanity<PostSummary[]>(
     `*[_type == "post" && recommended == true && !(_id in $excludeIds)] | order(publishedAt desc) [0...$limit]{ ${postSummaryFragment} }`,
-    { excludeIds, limit }
+    { excludeIds, limit },
+    []
   );
 }

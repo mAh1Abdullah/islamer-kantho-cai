@@ -20,7 +20,7 @@ export function SectionHeading({
   return (
     <div className={cn('max-w-2xl', align === 'center' && 'mx-auto text-center', className)}>
       {eyebrow && (
-        <p className="mb-3 text-caption font-medium uppercase tracking-wider text-secondary">
+        <p className="mb-3 text-caption font-medium uppercase tracking-wider text-text-secondary">
           {eyebrow}
         </p>
       )}

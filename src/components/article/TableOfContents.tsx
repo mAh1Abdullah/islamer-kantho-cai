@@ -32,7 +32,10 @@ export function TableOfContents({ entries }: TableOfContentsProps) {
       <ul className="mt-3 flex flex-col gap-2">
         {entries.map((entry) => (
           <li key={entry.id} className={entry.level === 3 ? 'pl-4' : ''}>
-            <a href={`#${entry.id}`} className="text-small text-text-secondary hover:text-primary">
+            <a
+              href={`#${entry.id}`}
+              className="text-small text-text-secondary transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            >
               {entry.text}
             </a>
           </li>

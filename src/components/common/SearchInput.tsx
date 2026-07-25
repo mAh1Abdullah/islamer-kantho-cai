@@ -28,7 +28,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           className={cn(
             'h-11 w-full rounded-md border border-border bg-surface pl-10 pr-10 text-body text-text-primary',
             'placeholder:text-text-secondary',
-            'focus:border-primary'
+            'focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20'
           )}
           {...props}
         />
@@ -37,7 +37,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             type="button"
             onClick={onClear}
             aria-label="সার্চ মুছুন"
-            className="absolute right-3 text-text-secondary hover:text-text-primary"
+            className="absolute right-3 rounded-full p-1 text-text-secondary transition-colors hover:bg-primary-tint hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           >
             ×
           </button>

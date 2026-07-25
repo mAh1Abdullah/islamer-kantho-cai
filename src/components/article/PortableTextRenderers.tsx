@@ -11,21 +11,30 @@ import type { SanityImage } from '@/types/sanity';
  */
 export const portableTextComponents: PortableTextComponents = {
   block: {
-    h2: ({ children, value }) => (
-      <h2 id={slugify(String(value.children?.[0]?.text ?? ''))} className="mt-12 scroll-mt-24 text-h2 text-text-primary">
-        {children}
-      </h2>
-    ),
-    h3: ({ children, value }) => (
-      <h3 id={slugify(String(value.children?.[0]?.text ?? ''))} className="mt-10 scroll-mt-24 text-h3 text-text-primary">
-        {children}
-      </h3>
-    ),
-    h4: ({ children, value }) => (
-      <h4 id={slugify(String(value.children?.[0]?.text ?? ''))} className="mt-8 scroll-mt-24 text-h4 text-text-primary">
-        {children}
-      </h4>
-    ),
+    h2: ({ children, value }) => {
+      const headingId = slugify(String(value.children?.[0]?.text ?? 'section'));
+      return (
+        <h2 id={headingId} className="mt-12 scroll-mt-24 text-h2 text-text-primary">
+          {children}
+        </h2>
+      );
+    },
+    h3: ({ children, value }) => {
+      const headingId = slugify(String(value.children?.[0]?.text ?? 'section'));
+      return (
+        <h3 id={headingId} className="mt-10 scroll-mt-24 text-h3 text-text-primary">
+          {children}
+        </h3>
+      );
+    },
+    h4: ({ children, value }) => {
+      const headingId = slugify(String(value.children?.[0]?.text ?? 'section'));
+      return (
+        <h4 id={headingId} className="mt-8 scroll-mt-24 text-h4 text-text-primary">
+          {children}
+        </h4>
+      );
+    },
     normal: ({ children }) => <p className="mt-5 text-body leading-relaxed text-text-primary">{children}</p>,
     blockquote: ({ children }) => (
       <blockquote className="mt-6 border-l-4 border-secondary bg-secondary-tint px-6 py-4 text-body italic text-text-primary">
@@ -45,10 +54,11 @@ export const portableTextComponents: PortableTextComponents = {
 
   marks: {
     link: ({ children, value }) => {
-      const isExternal = /^https?:\/\//.test(value?.href ?? '');
+      const href = value?.href ?? '#';
+      const isExternal = /^https?:\/\//.test(href);
       return (
         <a
-          href={value?.href}
+          href={href}
           {...(isExternal && { target: '_blank', rel: 'noopener noreferrer nofollow' })}
           className="text-primary underline underline-offset-2 hover:text-primary-hover"
         >

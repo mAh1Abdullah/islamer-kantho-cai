@@ -28,13 +28,20 @@ interface AladhanResponse {
  */
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const lat = searchParams.get('lat') ?? String(DEFAULT_LAT);
-  const lng = searchParams.get('lng') ?? String(DEFAULT_LNG);
-  const method = searchParams.get('method') ?? String(DEFAULT_METHOD);
+  const lat = searchParams.get('lat')?.trim() ?? String(DEFAULT_LAT);
+  const lng = searchParams.get('lng')?.trim() ?? String(DEFAULT_LNG);
+  const method = searchParams.get('method')?.trim() ?? String(DEFAULT_METHOD);
+
+  const parsedLat = Number.parseFloat(lat);
+  const parsedLng = Number.parseFloat(lng);
+  const parsedMethod = Number.parseInt(method, 10);
+  const safeLat = Number.isFinite(parsedLat) ? parsedLat : DEFAULT_LAT;
+  const safeLng = Number.isFinite(parsedLng) ? parsedLng : DEFAULT_LNG;
+  const safeMethod = Number.isInteger(parsedMethod) ? parsedMethod : DEFAULT_METHOD;
 
   try {
     const upstream = await fetch(
-      `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lng}&method=${method}`,
+      `https://api.aladhan.com/v1/timings?latitude=${safeLat}&longitude=${safeLng}&method=${safeMethod}`,
       { next: { revalidate: 3600 } } // prayer times only change daily; hourly revalidation is generous
     );
 

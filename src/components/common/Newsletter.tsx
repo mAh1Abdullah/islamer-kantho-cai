@@ -17,10 +17,16 @@ export function Newsletter({ onSubscribe, className }: NewsletterProps) {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
+      setStatus('error');
+      return;
+    }
+
     setStatus('loading');
     try {
-      await onSubscribe?.(email);
+      await onSubscribe?.(trimmedEmail);
       setStatus('success');
       setEmail('');
     } catch {
@@ -53,9 +59,9 @@ export function Newsletter({ onSubscribe, className }: NewsletterProps) {
         </Button>
       </form>
 
-      <p role="status" className="mt-3 text-small">
+      <p role="status" aria-live="polite" className="mt-3 text-small">
         {status === 'success' && <span className="text-success">সাবস্ক্রাইব সফল হয়েছে!</span>}
-        {status === 'error' && <span className="text-error">সমস্যা হয়েছে, আবার চেষ্টা করুন।</span>}
+        {status === 'error' && <span className="text-error">দয়া করে একটি বৈধ ইমেইল দিন এবং আবার চেষ্টা করুন।</span>}
       </p>
     </div>
   );
