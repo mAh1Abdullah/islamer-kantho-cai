@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-text-primary font-bangla antialiased;
+  }
+
+  /* Visible, calm focus ring everywhere — never removed, only restyled. */
+  :focus-visible {
+    outline: 2px solid theme('colors.primary.DEFAULT');
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-bangla font-semibold text-text-primary;
+  }
+
+  ::selection {
+    background-color: theme('colors.secondary.tint');
+    color: theme('colors.primary.DEFAULT');
+  }
+}
+
+@layer utilities {
+  .skeleton-shimmer {
+    position: relative;
+    overflow: hidden;
+    background-color: theme('colors.border');
+  }
+
+  .skeleton-shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.55),
+      transparent
+    );
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .skeleton-shimmer::after {
+      animation: shimmer 1.6s infinite;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

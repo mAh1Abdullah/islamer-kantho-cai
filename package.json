@@ -1,0 +1,35 @@
+{
+  "name": "islamer-kantho",
+  "version": "2.0.0",
+  "private": true,
+  "description": "ইসলামের কন্ঠ — Islamic knowledge platform. Next.js + Sanity CMS.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint . --ext .ts,.tsx",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^14.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@sanity/client": "^6.21.0",
+    "@sanity/image-url": "^1.1.0",
+    "@portabletext/react": "^3.1.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.4.0",
+    "date-fns": "^3.6.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "@types/node": "^20.14.15",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "tailwindcss": "^3.4.9",
+    "postcss": "^8.4.41",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.5"
+  }
+}
