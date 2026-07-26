@@ -1,88 +1,127 @@
-# Design System — ইসলামের কন্ঠ (Islamer Kantho)
+# Design System — Islamer Kantho v2.0
 
-## Tokens (from brief — followed exactly, not reinterpreted)
+This design system defines the visual language for the next generation of Islamer Kantho: a modern, premium Islamic publishing platform built with Next.js, TypeScript, TailwindCSS, and Sanity.
+
+## 1. Design Principles
+
+The interface should feel:
+- calm and minimal
+- premium and editorial
+- highly readable on mobile and desktop
+- respectful of Islamic content and cultural context
+- fast, accessible, and SEO-conscious
+
+The visual direction is inspired by modern publishing systems such as Medium, Apple, and respected Islamic media brands, while keeping a distinct editorial identity.
+
+## 2. Color System
+
+### Brand Palette
 
 | Token | Value | Use |
 |---|---|---|
-| Primary | `#055547` (Deep Emerald) | brand, links, primary buttons, active nav |
-| Secondary | `#D1BB9E` (warm sand) | badges, ornament, subtle accents |
-| Background | `#FAFAF8` | page background |
-| Surface | `#FFFFFF` | cards, header-on-scroll, modals |
-| Border | `#E8E8E8` | hairlines only — never used to box every element |
-| Text Primary | `#1F2937` | headings, body |
-| Text Secondary | `#6B7280` | meta, captions |
-| Success / Error / Warning | `#41B06E` / `#E72929` / `#F59E0B` | form + system feedback only |
+| Primary | #055547 | brand, primary actions, active navigation |
+| Secondary | #0F766E | supporting emphasis and interactive states |
+| Accent | #C8A44D | highlights, callouts, premium accents |
+| Background | #FAFAF7 | main page background |
+| Card | #FFFFFF | surfaces, cards, panels |
+| Text Primary | #1F2937 | headings and body copy |
+| Text Secondary | #6B7280 | metadata, captions, muted text |
+| Border | #E5E7EB | dividers and structural boundaries |
 
-Type scale (hero 64 / h1 48 / h2 36 / h3 30 / h4 24 / body 18 / small 15 /
-caption 13) is implemented as Tailwind `text-*` utilities in
-`tailwind.config.ts` — never use arbitrary `text-[Npx]` values elsewhere.
+### Usage Rules
+- Use deep emerald for primary brand moments.
+- Use warm gold sparingly for emphasis and editorial highlights.
+- Keep backgrounds soft and airy to support long-form reading.
+- Avoid heavy borders and overly loud decorative surfaces.
 
-Fonts: **Hind Siliguri** for Bangla body/headings (loaded via
-`next/font/google`, Bengali+Latin subsets), **Inter** for any Latin-only
-UI chrome (numerals in the studio login, etc). Both exposed as CSS
-variables (`--font-bangla`, `--font-inter`) so Tailwind's `font-bangla` /
-`font-sans` utilities stay the only place font-family is chosen.
+## 3. Typography
 
-## Signature element
+### Type Scale
+- Hero: 64px
+- H1: 48px
+- H2: 36px
+- H3: 30px
+- H4: 24px
+- Body: 18px
+- Small: 15px
+- Caption: 13px
 
-The brief already fixes the palette and the "calm / minimal / Apple /
-Medium / Notion" direction, so the one place left for a deliberate,
-subject-specific choice is a small piece of restraint: a single-line
-eight-point star (khatam), the geometric motif found throughout Islamic
-architecture and manuscript illumination, reduced to a 16px line-art
-mark. It appears in exactly one place in the whole system — the
-`Divider` component's `ornament` variant, used only between major
-sections (e.g. under the hero, above the footer CTA). Nowhere else does
-geometric ornament appear: no border patterns, no repeating background
-motifs, no icon set built from it. That restraint is what keeps it
-reading as *the* signature rather than decoration.
+### Font Families
+- Headings and editorial content: Noto Serif Bengali
+- Body copy: Hind Siliguri
+- Arabic content: Amiri
+- English UI and interface text: Inter
 
-## Why not the AI-default look
+The app should use the Tailwind typography utilities and shared tokens rather than arbitrary font sizing in components.
 
-This brief already pins its own direction (deep emerald, warm sand,
-off-white, generous whitespace) — nothing here reaches for the generic
-cream/terracotta, near-black/acid-green, or hairline-newspaper defaults.
-Shadows are avoided almost everywhere; the one exception (`Card`
-`interactive`) uses a barely-there tinted shadow (`rgba(5,85,71,0.06)`)
-derived from the primary color itself, not a generic gray box-shadow.
+## 4. Layout and Spacing
 
-## What's built in this pass
+Use a simple, generous spacing rhythm:
+- xs: 4px
+- sm: 8px
+- md: 12px
+- lg: 16px
+- xl: 24px
+- 2xl: 32px
+- 3xl: 48px
+- 4xl: 64px
 
-Foundation only (per your "start scaffolding" choice):
+### Layout Principles
+- prioritize mobile-first reading
+- keep comfortable line length for articles
+- use generous whitespace around sections
+- preserve strong vertical rhythm between content blocks
 
-- Project scaffold: `package.json`, `tsconfig.json` (strict, `@/*`
-  path aliases), `tailwind.config.ts`, `next.config.js`,
-  `postcss.config.js`
-- `constants/`: `colors.ts`, `layout.ts`, `routes.ts`, `site.ts`, `seo.ts`
-- `utils/`: `cn.ts`, `date.ts` (Bangla numerals/date), `readingTime.ts`
-- `styles/globals.css`: base resets, visible focus rings everywhere,
-  `prefers-reduced-motion` handling, skeleton shimmer
-- `components/common/`: `Container`, `Section`, `SectionHeading`,
-  `Button`, `IconButton`, `Badge`, `Tag`, `CategoryChip`, `Card`,
-  `Avatar`, `Divider` (incl. signature ornament), `LoadingSkeleton` +
-  `ArticleCardSkeleton`, `EmptyState`, `ScrollTopButton`, `SEO.tsx`
-  (metadata builder + JSON-LD helpers: Organization, Article, Breadcrumb)
-- `src/app/layout.tsx`: fonts wired via `next/font/google`, base metadata
-- `src/app/page.tsx`: a **temporary preview page** proving the
-  foundation composes correctly (not the real home page yet)
+## 5. Components
 
-## Not yet built (next steps, per your original 17-step plan)
+### Core UI Components
+- Buttons
+- Cards
+- Badges
+- Tags
+- Inputs
+- Avatars
+- Dividers
+- Empty states
+- Skeletons
+- Pagination
+- Drawer and navigation shell
+- Share and action buttons
 
-Steps 5–17: real Header/Footer, Hero Banner, the full Article Card
-variant set (small/medium/large/horizontal/featured/compact), Single
-Article page + Portable Text renderers, Sanity `lib/sanity/*` client +
-GROQ query modules, Search, Drawer, Prayer/Hijri widgets (lazy-loaded),
-`hooks/` (`useScroll`, `useMediaQuery`, `useDebounce`, `useInfinitePosts`,
-`useSearch`, `useMounted`), and the accessibility/performance/SEO
-hardening pass.
+### Editorial Components
+- Hero carousel
+- Article cards in multiple sizes
+- Article metadata block
+- Table of contents
+- Related articles
+- Quote and callout blocks
+- FAQ, hadith, and Quran verse blocks
+- gallery and media cards
 
-## Note on running this
+## 6. Interaction and Motion
 
-This environment has no network access, so dependencies were **not**
-installed and the build was **not** executed here — these are hand-written
-source files only. After downloading:
+- prefer subtle transitions over dramatic animation
+- use easing that feels calm and refined
+- keep motion optional for users who prefer reduced motion
+- ensure all interactive elements have visible focus states
 
-```bash
-npm install
-npm run dev
-```
+## 7. Accessibility and Inclusivity
+
+The design system must support:
+- WCAG AA contrast expectations
+- strong keyboard navigation
+- semantic HTML and readable structure
+- sufficient focus rings
+- alt text and accessible media behavior
+- reduced-motion support
+
+## 8. Implementation Notes
+
+The current implementation uses:
+- TailwindCSS for tokens and utilities
+- shared primitives under the components/common layer
+- semantic layout patterns for responsive pages
+- centralized app constants for theme values and routes
+
+The system should remain reusable, composable, and easy to extend as the CMS-driven product grows.
+

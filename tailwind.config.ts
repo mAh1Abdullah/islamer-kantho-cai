@@ -11,12 +11,13 @@ const config: Config = {
           tint: '#E6EFED',
         },
         secondary: {
-          DEFAULT: '#D1BB9E',
-          tint: '#F5EFE7',
+          DEFAULT: '#0F766E',
+          tint: '#DFF3EF',
         },
-        background: '#FAFAF8',
+        accent: '#C8A44D',
+        background: '#FAFAF7',
         surface: '#FFFFFF',
-        border: '#E8E8E8',
+        border: '#E5E7EB',
         text: {
           primary: '#1F2937',
           secondary: '#6B7280',

@@ -6,13 +6,14 @@
  */
 
 export const colors = {
-  primary: '#055547', // Deep Emerald — brand, links, active states
-  secondary: '#D1BB9E', // Warm sand — accents, highlights, badges
-  background: '#FAFAF8', // Page background
-  surface: '#FFFFFF', // Card / elevated surface background
-  border: '#E8E8E8', // Hairline borders and dividers
-  textPrimary: '#1F2937', // Body copy, headings
-  textSecondary: '#6B7280', // Meta text, captions, muted labels
+  primary: '#055547', // Deep Emerald — brand, links, primary actions
+  secondary: '#0F766E', // Secondary brand tone
+  accent: '#C8A44D', // Editorial highlight and premium accent
+  background: '#FAFAF7', // Main page background
+  surface: '#FFFFFF', // Cards and elevated surfaces
+  border: '#E5E7EB', // Structural borders and dividers
+  textPrimary: '#1F2937', // Headings and body copy
+  textSecondary: '#6B7280', // Metadata and muted text
   success: '#41B06E',
   error: '#E72929',
   warning: '#F59E0B',
@@ -25,7 +26,8 @@ export type ColorToken = keyof typeof colors;
  * Kept separate so the core palette (colors) stays a flat, auditable list.
  */
 export const colorTints = {
-  primaryTint: '#E6EFED', // primary at ~8% for subtle backgrounds/badges
-  primaryHover: '#043E33', // primary, darkened ~15% for hover/active
-  secondaryTint: '#F5EFE7', // secondary at ~15% for subtle backgrounds
+  primaryTint: '#E6EFED',
+  primaryHover: '#043E33',
+  secondaryTint: '#DFF3EF',
+  accentTint: '#F8F0DB',
 } as const;

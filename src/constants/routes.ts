@@ -5,11 +5,18 @@
 
 export const routes = {
   home: '/',
+  archive: '/archive',
   article: (slug: string) => `/article/${slug}`,
   category: (slug: string) => `/category/${slug}`,
+  authors: '/authors',
   author: (slug: string) => `/author/${slug}`,
+  qa: '/qa',
+  question: (slug: string) => `/qa/${slug}`,
+  media: '/media',
+  mediaItem: (slug: string) => `/media/${slug}`,
+  gallery: '/gallery',
+  galleryItem: (slug: string) => `/gallery/${slug}`,
   search: '/search',
-  archive: '/archive',
   page: (slug: string) => `/page/${slug}`,
   studio: '/studio',
 } as const;

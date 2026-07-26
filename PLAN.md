@@ -1,71 +1,502 @@
-# Development Plan — ইসলামের কন্ঠ Rebuild
+# Islamer Kantho v2.0 — Development Plan
 
-Foundation (Phase 0) is done — tokens, config, and the `components/common/`
-primitives. This plan sequences everything else so each phase only depends
-on phases already built, and nothing gets built twice.
+This plan replaces the earlier rebuild outline and reflects the complete product blueprint for a modern, CMS-driven Islamic publishing platform.
 
-| Phase | Deliverable | Depends on |
-|---|---|---|
-| 0 ✅ | Design tokens, Tailwind config, `components/common/*`, `utils/cn,date,readingTime`, `SEO.tsx` | — |
-| 1 ✅ | **Data layer**: `types/`, `lib/sanity/client.ts`, `queries.ts`, `posts.ts`, `categories.ts`, `authors.ts`, `featured.ts`, `recommended.ts` | 0 |
-| 2 ✅ | **Hooks**: `useScroll`, `useMediaQuery`, `useDebounce`, `useMounted`, `useInfinitePosts`, `useSearch` | 1 |
-| 3 ✅ | **Layout shell**: `Header` (sticky/transparent-to-white), `Footer`, `Drawer`, `Navigation` | 0, 2 |
-| 4 ✅ | **Home page**: `HeroBanner`, `ArticleCard` (all 6 variants), `PrayerWidget`+`HijriWidget` (lazy via `next/dynamic`), real Home composition wired to Sanity | 1, 2, 3 |
-| 5 ✅ | **Category pages**: grid + Load More / infinite pagination | 1, 2, 4 |
-| 6 ✅ | **Single Article page**: Portable Text renderers, `ArticleMeta`, `Date`, `ShareButtons`, TOC, related articles, `Newsletter`, back-to-top | 1, 4 |
-| 7 ✅ | **Search**: `SearchInput`, debounced instant search, keyboard nav, empty/loading states | 1, 2 |
-| 8 ✅ | **SEO wiring**: real per-page `generateMetadata` + JSON-LD on Home/Category/Article, `sitemap.ts`, `robots.ts` | 1, 4, 5, 6 |
-| 9 ✅ | **Accessibility pass**: Drawer focus trap, focus-return-on-close; performance already covered by Phase 1-7's `sizes`/`priority`/blur/lazy-widget choices | all above |
-| 10 | **Final cleanup**: dead code, duplicate query check, naming pass, this-file docs | all above |
+## 1. Project Vision
 
-## Notes from this pass (Phase 8–9)
+Build a premium-quality Islamic digital publication platform that is fast, SEO-optimized, scalable, and fully manageable from Sanity CMS.
 
-- **Sitemap/robots**: `app/sitemap.ts` walks all posts in batches (not a
-  single unbounded query) plus categories; `app/robots.ts` disallows
-  `/studio` and `/api/`.
-- **JSON-LD consolidated**: Organization + WebSite (with a SearchAction
-  pointing at `/search?q=`) now render once, site-wide, from the root
-  layout — previously Organization was only on Home, which would have
-  meant duplicating it as more pages needed it. Article/Breadcrumb schemas
-  stay page-specific (Article, Category, single Article pages).
-- **The two open API routes are now real**:
-  - `/api/hijri-date` — implemented as a local deterministic tabular
-    Islamic-calendar conversion (`utils/hijri.ts`), not an external call.
-  - `/api/prayer-times` — deliberately proxies the Aladhan API server-side
-    rather than hand-rolling sun-angle astronomy: prayer times are a
-    religious-observance feature where a subtle formula bug is a
-    real-world harm, and the calculation *method* (angle convention)
-    genuinely varies by regional authority — Aladhan's `method` param
-    handles that; a generic formula can't. Defaults to Dhaka coordinates
-    and the Karachi method (common across Bangladesh/South Asia),
-    overridable via `?lat=&lng=&method=`.
-- **Accessibility**: `Drawer` only set initial focus before — added a
-  real Tab/Shift+Tab focus trap over the panel's focusable elements (WCAG
-  2.1 AA dialog requirement) and focus-return to whatever opened it
-  (the hamburger button) on close.
-- Not independently re-verified: actual Lighthouse scores, since running
-  a real audit needs a live build (`npm install && npm run build` — not
-  possible in this no-network environment). Everything gating those
-  scores (image `sizes`/`priority`/blur, lazy-loaded widgets, semantic
-  headings, focus rings, `prefers-reduced-motion`) is in place from
-  earlier phases, but treat the "95+/100/100/100" targets as unverified
-  until you run it locally.
+The platform should combine:
+- the simplicity of Medium
+- the structure of a professional news website
+- the elegance of premium Islamic publications
 
-## Notes from Phases 5–7 (still relevant)
+Primary content areas:
+- Islamic articles
+- Islamic Q&A
+- Media library
+- Image gallery
+- Static pages
+- Powerful search
+- Excellent reading experience
 
-- Category page renders page 1 server-side (SEO/LCP) and hands off to
-  `CategoryGridClient` (client component + `useInfinitePosts`) for
-  "Load More" pages.
-- `estimateReadingTime`'s signature was tightened to accept
-  `PortableTextBlock[] | string` directly (was a loose inline shape that
-  wouldn't have type-checked cleanly against strict mode).
-- Caught and fixed two invalid-nesting bugs (`<Link>` nested inside
-  `<button>` in Header/HeroBanner, and `ArticleCard`'s own `<Link>`
-  double-wrapped in `SearchClient`) — both replaced with a plain
-  styled element instead of nesting interactive elements.
+---
 
-## What's left — Phase 10 only
+## 2. Product Goals
 
-Dead-code sweep, a duplicate-GROQ-field check (should already be clean —
-everything composes from `lib/sanity/queries.ts` fragments), a naming
-pass, and confirming every file that needs a "why" comment has one.
+The v2.0 release should deliver:
+- modern minimal UI
+- lightning-fast performance
+- premium reading experience
+- mobile-first design
+- accessibility (WCAG AA)
+- strong SEO
+- dynamic content management
+- easy administration
+- future scalability
+
+---
+
+## 3. Core Technology Stack
+
+### Frontend
+- Next.js 15
+- React 19
+- TypeScript
+- TailwindCSS
+- Framer Motion
+- React Icons
+- Shadcn UI
+- Lucide Icons
+
+### CMS
+- Sanity v3
+- Sanity Content Lake
+
+### Deployment
+- Vercel
+- ISR
+- Edge-ready architecture
+- Optimized image pipeline
+
+---
+
+## 4. Design Language
+
+### Theme
+Modern Islamic Minimalism
+
+### Color System
+- Primary: #055547
+- Secondary: #0F766E
+- Accent: #C8A44D
+- Background: #FAFAF7
+- Card: #FFFFFF
+- Text: #1F2937
+- Muted: #6B7280
+- Border: #E5E7EB
+
+### Typography
+- Headings: Noto Serif Bengali
+- Body: Hind Siliguri
+- Arabic: Amiri
+- English: Inter
+
+---
+
+## 5. Site Structure
+
+The platform will include:
+- Home
+- Articles
+- Q&A
+- Media
+- Gallery
+- Pages
+- Search
+
+Navigation must be CMS-driven, not hardcoded.
+
+---
+
+## 6. Core Product Requirements
+
+### Header
+- sticky layout
+- glass effect while scrolling
+- CMS-managed navigation
+- search button
+- responsive mobile drawer
+
+### Prayer Time Bar
+- displays Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha
+- shows Gregorian and Hijri dates
+- updates automatically
+
+### Hero Section
+- large carousel with unlimited slides
+- image, headline, subtitle, CTA, internal/external links
+- scheduling, ordering, and visibility controls
+- autoplay, swipe, keyboard support, pause-on-hover
+
+### Homepage Sections
+- hero
+- featured articles
+- latest articles
+- popular articles
+- editor’s picks
+- Q&A
+- media
+- gallery preview
+- newsletter
+
+Each homepage section should be CMS-configurable and reorderable.
+
+### Articles
+- feature image
+- title, slug, category, tags, author
+- publish date, reading time
+- SEO fields
+- related content
+- social sharing
+- print support
+
+### Rich Content Editor
+Support block-based content including:
+- paragraphs
+- headings
+- quotes
+- Arabic quotes
+- images and galleries
+- YouTube, video, audio, PDF embeds
+- tables, callouts, FAQs, hadith, Quran verses
+- columns, buttons, references, footnotes, code blocks
+
+### Categories
+Fully dynamic and editable from CMS:
+- create, edit, delete
+- color, icon, order, slug, description, SEO
+
+### Q&A Module
+Separate content type with:
+- question
+- answer
+- category
+- scholar
+- tags
+- related questions
+- SEO
+
+### Media Library
+- videos
+- podcasts
+- audio lectures
+- playlists
+- embedded media
+- YouTube, Spotify, SoundCloud, MP3, uploaded video
+
+### Gallery Module
+- galleries and albums
+- multiple image uploads
+- cover image
+- descriptions
+- download support
+- search and pagination
+- lightbox viewing
+
+### Static Pages
+CMS-managed pages such as:
+- About
+- Contact
+- Privacy
+- Terms
+- Donate
+- Authors
+- Advertising
+- Write for Us
+- Gallery
+- Media
+- custom pages
+
+### Global Search
+Search across:
+- articles
+- pages
+- Q&A
+- gallery
+- media
+- tags
+- categories
+- authors
+
+### Sidebar
+Three editable blocks:
+- advertisement banner
+- partner logos
+- popular posts
+
+### Footer
+CMS-editable footer with:
+- logo
+- mission
+- navigation links
+- social links
+- newsletter
+- contact details
+- privacy and terms links
+
+---
+
+## 7. CMS Content Models
+
+The platform must support these Sanity content types:
+- Site Settings
+- Navigation
+- Footer
+- Page
+- Article
+- Q&A
+- Category
+- Tag
+- Author
+- Media
+- Gallery
+- Gallery Album
+- Hero Slide
+- Advertisement
+- Partner Logo
+- Social Link
+- SEO Settings
+- Prayer Time Configuration
+- Homepage Sections
+
+---
+
+## 8. SEO and Performance Targets
+
+### SEO
+Every page should support:
+- SEO title
+- meta description
+- slug
+- canonical
+- OpenGraph
+- Twitter card
+- schema markup
+- breadcrumbs
+- sitemap
+- RSS
+- robots rules
+
+### Performance Targets
+- LCP < 2s
+- CLS < 0.1
+- TTFB < 200ms
+- INP < 200ms
+
+### Optimization Strategy
+- image CDN and optimization
+- dynamic imports
+- ISR
+- streaming and code splitting
+- lazy loading
+- caching
+- font optimization
+
+---
+
+## 9. Accessibility and Security
+
+### Accessibility
+- WCAG AA compliance
+- keyboard navigation
+- ARIA support
+- focus states
+- semantic HTML
+- reduced motion support
+- alt text and contrast checks
+
+### Security
+- Sanity roles
+- rate limiting
+- CSP and headers
+- input validation
+- image validation
+- XSS and spam protection
+- HTTPS enforcement
+
+---
+
+## 10. Development Roadmap
+
+### Phase 1 — Project Initialization
+Goal: prepare the development environment.
+
+Tasks:
+- create Next.js app structure
+- configure TypeScript
+- install TailwindCSS
+- configure ESLint and Prettier
+- set up path aliases and environment variables
+- prepare Vercel deployment setup
+
+### Phase 2 — Design System
+Goal: create a reusable UI foundation.
+
+Deliverables:
+- colors
+- typography
+- spacing and radius
+- buttons, cards, badges, avatars
+- inputs, dialogs, drawers, pagination, skeletons, empty states
+
+### Phase 3 — CMS Architecture
+Goal: design all Sanity schemas and content models.
+
+Deliverables:
+- site settings
+- navigation
+- footer
+- pages
+- articles
+- categories
+- tags
+- authors
+- media
+- gallery
+- hero slides
+- ads and partner logos
+- Q&A
+- homepage sections
+- SEO and prayer configuration
+
+### Phase 4 — Application Architecture
+Goal: establish the application foundation.
+
+Deliverables:
+- CMS client
+- image loader
+- SEO helper
+- API layer
+- data fetching layer
+- error handling
+- caching utilities
+- providers and global context
+
+### Phase 5 — Global Layout
+Goal: build the core shell of the site.
+
+Deliverables:
+- root layout
+- header
+- prayer time bar
+- footer
+- sidebar
+- container and breadcrumb system
+- responsive navigation
+
+### Phase 6 — Header and Navigation
+Goal: make navigation fully CMS-driven.
+
+Requirements:
+- editors can add, remove, hide, rename, reorder, publish, and unpublish pages without changing code
+
+### Phase 7 — Prayer Time Bar
+Goal: deliver live prayer timing and date display.
+
+### Phase 8 — Homepage
+Goal: build a dynamic homepage.
+
+Deliverables:
+- hero slider
+- featured articles
+- latest articles
+- popular articles
+- editor’s picks
+- Q&A
+- media
+- gallery preview
+- newsletter
+
+### Phase 9 — Hero Carousel
+Goal: ship a production-ready hero experience.
+
+Features:
+- unlimited slides
+- image, overlay, headline, subtitle, CTA
+- internal/external links
+- scheduling and priority
+- autoplay, swipe, keyboard, hover pause, indicators, arrows
+
+### Phase 10 — Articles Module
+Goal: ship complete article listing and detail experiences.
+
+Deliverables:
+- article listing
+- article cards
+- single article page
+- category and tag filters
+- related content
+- reading time
+- sharing and print support
+- SEO
+
+### Phase 11 — Rich Article Editor
+Goal: support a professional block-based editorial experience.
+
+### Phase 12 — Categories
+Goal: implement full category management.
+
+### Phase 13 — Q&A Module
+Goal: build the dedicated Q&A experience.
+
+### Phase 14 — Media Module
+Goal: implement the media center.
+
+### Phase 15 — Gallery Module
+Goal: build gallery browsing, albums, and lightbox viewing.
+
+### Phase 16 — Dynamic Pages
+Goal: make static pages fully editable from CMS.
+
+### Phase 17 — Global Search
+Goal: ship instant, keyboard-friendly search across all major content types.
+
+### Phase 18 — Sidebar
+Goal: implement dynamic sidebar blocks for ads, partners, and popular posts.
+
+### Phase 19 — Footer
+Goal: finish the CMS-managed footer system.
+
+### Phase 20 — SEO
+Goal: implement metadata, JSON-LD, breadcrumbs, RSS, sitemap, and robots.
+
+### Phase 21 — Performance
+Goal: optimize loading, streaming, rendering, and asset delivery.
+
+### Phase 22 — Accessibility
+Goal: meet WCAG AA expectations.
+
+### Phase 23 — Security
+Goal: harden the application and API surfaces.
+
+### Phase 24 — Analytics
+Goal: add tracking for content engagement and search behavior.
+
+### Phase 25 — Testing
+Goal: validate the app with unit, integration, accessibility, performance, and SEO tests.
+
+### Phase 26 — Deployment
+Goal: deploy to Vercel with production configuration and monitoring.
+
+### Phase 27 — Post-Launch
+Goal: monitor performance, SEO, analytics, security, and CMS health.
+
+### Phase 28 — Future Enhancements
+Potential future additions include:
+- dark mode
+- bookmarks
+- reading history
+- user accounts
+- notifications
+- prayer reminders
+- PWA/offline reading
+- Arabic translation
+- English version
+- Bangla transliteration
+- AI search and AI summaries
+- voice reading
+- membership and donation features
+
+---
+
+## 11. Final Milestone
+
+The finished product should be a production-ready Islamic publishing platform where major content, layout, and navigation are controlled from Sanity CMS rather than hardcoded into the application.
+
+It should deliver:
+- premium reading experience
+- strong SEO and accessibility
+- high performance
+- scalable architecture
+- capacity for multilingual and AI-enhanced future expansion
