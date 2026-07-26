@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Hind_Siliguri } from 'next/font/google';
 import { site } from '@/constants/site';
 import { Header } from '@/components/layout/Header';
+import { PrayerBar } from '@/components/layout/PrayerBar';
 import { Footer } from '@/components/layout/Footer';
 import { ScrollTopButton } from '@/components/common/ScrollTopButton';
 import { JsonLd, organizationJsonLd, websiteJsonLd } from '@/components/common/SEO';
@@ -47,6 +48,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <JsonLd data={organizationJsonLd()} />
         <JsonLd data={websiteJsonLd()} />
         <Header categories={categories} />
+        <PrayerBar />
         <div className="flex-1">{children}</div>
         <Footer categories={categories} />
         <ScrollTopButton />
