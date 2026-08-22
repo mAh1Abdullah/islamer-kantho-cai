@@ -1,0 +1,6 @@
+{
+  "name": "ইসলামের কন্ঠ (Islamer Kantho)",
+  "description": "Islamic knowledge platform with articles, prayer times, Hijri calendar, Q&A, and media library.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

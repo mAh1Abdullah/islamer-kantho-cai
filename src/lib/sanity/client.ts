@@ -1,17 +1,18 @@
 import { createClient, type ClientConfig } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID?.trim() ?? '';
+const rawProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID?.trim() ?? '';
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET?.trim() ?? 'production';
 
+const isValidSanityProjectId = (id: string): boolean => /^[a-z0-9-]+$/.test(id);
+export const isSanityConfigured = Boolean(rawProjectId && isValidSanityProjectId(rawProjectId));
+
 const config: ClientConfig = {
-  projectId,
+  projectId: isSanityConfigured ? rawProjectId : 'dummy-project-id',
   dataset,
   apiVersion: '2025-01-01',
   useCdn: process.env.NODE_ENV === 'production',
 };
-
-export const isSanityConfigured = Boolean(projectId);
 
 export interface SanityClientLike {
   fetch<T = unknown>(query: string, params?: Record<string, unknown>): Promise<T>;

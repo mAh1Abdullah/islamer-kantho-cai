@@ -4,9 +4,9 @@
   "private": true,
   "description": "ইসলামের কন্ঠ — Islamic knowledge platform. Next.js + Sanity CMS.",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3000 -H 0.0.0.0",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3000 -H 0.0.0.0",
     "lint": "eslint . --ext .ts,.tsx",
     "typecheck": "tsc --noEmit"
   },
