@@ -5,15 +5,18 @@ import { Divider } from '@/components/common/Divider';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Newsletter } from '@/components/common/Newsletter';
 import { ArticleCard } from '@/components/article/ArticleCard';
+import { ArticleRankingWidget } from '@/components/home/ArticleRankingWidget';
+import { ImportantLinksWidget } from '@/components/home/ImportantLinksWidget';
 import { LazyPrayerWidget, LazyHijriWidget } from '@/components/home/LazyWidgets';
 import type { PostSummary } from '@/types/sanity';
 
 interface HomeSectionsProps {
   featuredPosts: PostSummary[];
   recommendedPosts: PostSummary[];
+  rankedPosts?: PostSummary[];
 }
 
-export function HomeSections({ featuredPosts, recommendedPosts }: HomeSectionsProps) {
+export function HomeSections({ featuredPosts, recommendedPosts, rankedPosts = [] }: HomeSectionsProps) {
   const [heroPost, ...restFeatured] = featuredPosts;
 
   return (
@@ -21,7 +24,7 @@ export function HomeSections({ featuredPosts, recommendedPosts }: HomeSectionsPr
       {heroPost ? (
         <Section spacing="tight">
           <Container>
-            <div className="grid gap-8 lg:grid-cols-[1.6fr_0.8fr] lg:items-start">
+            <div className="grid gap-8 lg:grid-cols-[1.55fr_0.85fr] lg:items-start">
               <div className="space-y-6">
                 <SectionHeading
                   eyebrow="ফিচার্ড"
@@ -35,10 +38,14 @@ export function HomeSections({ featuredPosts, recommendedPosts }: HomeSectionsPr
                   ))}
                 </div>
               </div>
-              <div className="space-y-4">
+
+              {/* Homepage Sidebar */}
+              <aside className="space-y-5">
+                <ArticleRankingWidget posts={rankedPosts} />
+                <ImportantLinksWidget />
                 <LazyPrayerWidget />
                 <LazyHijriWidget />
-              </div>
+              </aside>
             </div>
           </Container>
         </Section>

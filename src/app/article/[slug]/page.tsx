@@ -11,11 +11,15 @@ import { Newsletter } from '@/components/common/Newsletter';
 import { Divider } from '@/components/common/Divider';
 import { SectionHeading } from '@/components/common/SectionHeading';
 import { ArticleCard } from '@/components/article/ArticleCard';
+import { PrintButton } from '@/components/article/PrintButton';
+import { ReadingProgressBar } from '@/components/article/ReadingProgressBar';
+import { AudioReader } from '@/components/article/AudioReader';
 import { portableTextComponents } from '@/components/article/PortableTextRenderers';
 import { TableOfContents, extractToc } from '@/components/article/TableOfContents';
 import { getPostBySlug, getRelatedPosts } from '@/lib/sanity/posts';
 import { getImageUrl, getBlurDataUrl } from '@/utils/image';
 import { estimateReadingTime } from '@/utils/readingTime';
+import { extractArticleTextChunks } from '@/utils/textExtractor';
 import { formatBanglaDate, wasUpdated } from '@/utils/date';
 import { site } from '@/constants/site';
 import { routes } from '@/constants/routes';
@@ -53,9 +57,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const toc = extractToc(post.body);
   const articleUrl = `${site.url}${routes.article(post.slug)}`;
   const updated = wasUpdated(post.publishedAt, post.updatedAt);
+  const textChunks = extractArticleTextChunks(post);
 
   return (
     <main>
+      <ReadingProgressBar />
+
       <JsonLd
         data={articleJsonLd({
           title: post.title,
@@ -75,7 +82,21 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         ])}
       />
 
-      <div className="relative h-[320px] w-full overflow-hidden sm:h-[420px] lg:h-[480px]">
+      {/* Print only header */}
+      <div className="hidden print-header">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-primary">{site.name}</h2>
+            <p className="text-xs text-gray-500">{site.tagline}</p>
+          </div>
+          <div className="text-right text-xs text-gray-500">
+            <p>{site.url}</p>
+            <p>{formatBanglaDate(new Date().toISOString())}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative h-[320px] w-full overflow-hidden sm:h-[420px] lg:h-[480px] print:h-[260px] print:mb-6">
         <Image
           src={getImageUrl(post.coverImage, 1600)}
           alt={post.coverImage.alt ?? post.title}
@@ -89,35 +110,46 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
       <Section spacing="tight">
         <Container narrow>
-          <CategoryChip label={post.category.title} slug={post.category.slug} />
-          <h1 className="mt-4 text-h1 leading-tight text-text-primary">{post.title}</h1>
+          <div className="print:hidden">
+            <CategoryChip label={post.category.title} slug={post.category.slug} />
+          </div>
+          <div className="hidden print:block text-xs font-semibold text-primary uppercase tracking-wider mb-1">
+            {post.category.title}
+          </div>
+          
+          <h1 className="mt-4 text-h1 leading-tight text-text-primary print:text-2xl print:mt-1">{post.title}</h1>
 
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 print:mt-3 print:border-b print:border-gray-200 print:pb-3">
             <ArticleMeta author={post.author} publishedAt={post.publishedAt} readingTime={readingTime} avatarSize="md" />
-            <ShareButtons url={articleUrl} title={post.title} />
+            <div className="flex items-center gap-3">
+              <PrintButton variant="button" />
+              <ShareButtons url={articleUrl} title={post.title} />
+            </div>
           </div>
 
           {updated && (
-            <p className="mt-2 text-caption text-text-secondary">
+            <p className="mt-2 text-caption text-text-secondary print:text-xs">
               হালনাগাদ: {formatBanglaDate(post.updatedAt as string)}
             </p>
           )}
+
+          <AudioReader title={post.title} chunks={textChunks} className="mt-6" />
         </Container>
       </Section>
 
       <Container narrow>
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[220px_1fr]">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[220px_1fr] print:block">
           {toc.length > 0 && (
-            <aside className="hidden lg:block">
+            <aside className="hidden lg:block print:hidden toc-container">
               <div className="sticky top-24">
                 <TableOfContents entries={toc} />
               </div>
             </aside>
           )}
 
-          <article className={toc.length > 0 ? '' : 'lg:col-span-2'}>
+          <article className={toc.length > 0 ? 'print:w-full' : 'lg:col-span-2 print:w-full'}>
             {toc.length > 0 && (
-              <div className="mb-8 lg:hidden">
+              <div className="mb-8 lg:hidden print:hidden toc-container">
                 <TableOfContents entries={toc} />
               </div>
             )}
@@ -126,8 +158,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </div>
       </Container>
 
+      {/* Print only footer */}
+      <div className="hidden print-footer">
+        <p>উৎস: {articleUrl}</p>
+        <p>© {site.name} — সকল স্বত্ব সংরক্ষিত।</p>
+      </div>
+
       {related.length > 0 && (
-        <Section>
+        <Section className="related-articles print:hidden">
           <Container narrow>
             <Divider variant="ornament" className="mb-10" />
             <SectionHeading eyebrow="সম্পর্কিত" title="আরও পড়ুন" />
@@ -140,7 +178,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </Section>
       )}
 
-      <Section tone="surface">
+      <Section tone="surface" className="newsletter-section print:hidden">
         <Container narrow>
           <Newsletter />
         </Container>
@@ -148,3 +186,4 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     </main>
   );
 }
+

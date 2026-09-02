@@ -47,21 +47,29 @@ export function ArticleCard({ post, variant = 'medium', priority = false, classN
 
   const imageEl = (
     <div className={cn('relative w-full shrink-0 overflow-hidden rounded-md', imageAspectByVariant[variant], isHorizontalLayout && 'w-28 sm:w-40')}>
-      <Image
-        src={getImageUrl(post.coverImage, 800)}
-        alt={post.coverImage.alt ?? post.title}
-        fill
-        priority={priority}
-        placeholder="blur"
-        blurDataURL={getBlurDataUrl(post.coverImage)}
-      />
+      <Link href={routes.article(post.slug)} className="block h-full w-full">
+        <Image
+          src={getImageUrl(post.coverImage, 800)}
+          alt={post.coverImage.alt ?? post.title}
+          fill
+          priority={priority}
+          placeholder="blur"
+          blurDataURL={getBlurDataUrl(post.coverImage)}
+        />
+      </Link>
     </div>
   );
 
   const bodyEl = (
     <div className="flex flex-1 flex-col gap-2">
-      <CategoryChip label={post.category.title} slug={post.category.slug} />
-      <h3 className={cn(titleSizeByVariant[variant], 'leading-snug text-text-primary')}>{post.title}</h3>
+      <div className="w-fit">
+        <CategoryChip label={post.category.title} slug={post.category.slug} />
+      </div>
+      <h3 className={cn(titleSizeByVariant[variant], 'leading-snug text-text-primary')}>
+        <Link href={routes.article(post.slug)} className="hover:text-primary transition-colors">
+          {post.title}
+        </Link>
+      </h3>
       {(variant === 'large' || variant === 'featured') && post.excerpt && (
         <p className="text-body text-text-secondary line-clamp-2">{post.excerpt}</p>
       )}
@@ -78,13 +86,12 @@ export function ArticleCard({ post, variant = 'medium', priority = false, classN
       padding="none"
       className={cn('group overflow-hidden', variant === 'featured' && 'bg-primary-tint/40', className)}
     >
-      <Link
-        href={routes.article(post.slug)}
+      <div
         className={cn('flex h-full gap-4', isHorizontalLayout ? 'flex-row items-start p-3' : 'flex-col p-4')}
       >
         {imageEl}
         {bodyEl}
-      </Link>
+      </div>
     </Card>
   );
 }

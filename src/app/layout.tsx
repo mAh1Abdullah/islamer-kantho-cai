@@ -40,8 +40,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const categories = await getAllCategories();
 
   return (
-    <html lang="bn" className={`${inter.variable} ${hindSiliguri.variable}`}>
-      <body className="flex min-h-screen flex-col">
+    <html lang="bn" className={`${inter.variable} ${hindSiliguri.variable}`} suppressHydrationWarning>
+      <body className="flex min-h-screen flex-col" suppressHydrationWarning>
         {/* Organization + WebSite (with SearchAction) schemas belong site-wide,
             not per-page, so they live here rather than being repeated in
             Home's own JSON-LD (which only adds page-specific schemas). */}

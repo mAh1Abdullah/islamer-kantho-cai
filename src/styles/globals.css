@@ -67,3 +67,90 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Custom CSS Print Media Queries for clean, readable article printing */
+@media print {
+  @page {
+    margin: 1.5cm;
+    size: auto;
+  }
+
+  html, body {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    font-size: 12pt !important;
+    line-height: 1.6 !important;
+  }
+
+  /* Hide unnecessary web UI elements */
+  header,
+  footer,
+  nav,
+  aside,
+  .print\\:hidden,
+  [data-print-hide="true"],
+  button,
+  form,
+  .newsletter-section,
+  .related-articles,
+  .toc-container,
+  .prayer-bar,
+  .scroll-top-btn {
+    display: none !important;
+  }
+
+  /* Reset layout constraints for paper flow */
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  article {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Typography and page-break optimization */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    break-after: avoid;
+    color: #000000 !important;
+  }
+
+  p, blockquote, figure, table, img {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  blockquote {
+    border-left: 3px solid #047857 !important;
+    background-color: #f9fafb !important;
+    padding: 0.8rem 1rem !important;
+    margin: 1rem 0 !important;
+  }
+
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Print Header watermark / branding */
+  .print-header {
+    display: block !important;
+    border-bottom: 2px solid #047857;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+  }
+
+  .print-footer {
+    display: block !important;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 8px;
+    margin-top: 30px;
+    font-size: 9pt;
+    color: #6b7280;
+  }
+}
+
